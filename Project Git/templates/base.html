@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Weatherstation Deluxe</title>
+    <meta name="description" content="Project 1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='normalize.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='screen.css')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+</head>
+<body>
+
+<div class="body">
+<div class="c-page">
+    <header>
+      <div class="o-row o-row--md o-row--header">
+        <div class="o-container">
+          <div class="c-header">
+            <div class="c-header__logo">
+              <h1 class="c-logo">Weatherstation Deluxe
+              </h1>
+            </div>
+            <div class="c-header__nav c-header__nav--main">
+              <nav class="c-nav">
+                <ul class="o-list c-nav__list">
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('temperature')}}">Temperature: {{weather_data[0]}} C</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('airpressure')}}">Airpressure: {{weather_data[1]}} hPA</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('humidity')}}">Humidity: {{weather_data[2]}} %</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('uvindex')}}">UV: {{weather_data[3]}}</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('lightindex')}}">Light: {{weather_data[4]}} lux</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('rainfall')}}">Rainfall: {{weather_data[5]}}</a></li>
+                <li class="c-nav__item"><a class="c-nav__link" href="{{url_for('windspeed')}}">Windspeed: {{weather_data[6]}} m/s</a></li>
+
+                </ul>
+              </nav>
+            </div>
+
+
+            <div class="c-header__mobile-nav-trigger">
+              <button class="o-button-reset c-nav-trigger js-toggle-nav" onclick="openSlideMenu()">
+                    <svg class="c-nav-trigger__svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+              </button>
+            </div>
+            <div id="side-menu" class="side-nav">
+              <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
+              <a href="{{url_for('temperature')}}">Temperature: {{weather_data[0]}} C</a>
+              <a href="{{url_for('airpressure')}}">Airpressure: {{weather_data[1]}} hPA</a>
+              <a href="{{url_for('humidity')}}">Humidity: {{weather_data[2]}} %</a>
+              <a href="{{url_for('uvindex')}}">UV-index: {{weather_data[3]}} </a>
+              <a href="{{url_for('lightindex')}}">Light-index: {{weather_data[4]}} lux</a>
+              <a href="{{url_for('rainfall')}}">Rainfall: {{weather_data[5]}}</a>
+              <a href="{{url_for('windspeed')}}">Windspeed: {{weather_data[6]}} m/s</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+    <script>
+        function openSlideMenu() {
+            document.getElementById('side-menu').style.width = '250px';
+        }
+        function closeSlideMenu() {
+            document.getElementById('side-menu').style.width = '0';
+        }
+    </script>
+
+    <div class="">
+        <canvas id="weatherChart" height="400" width="800"></canvas>
+    </div>
+
+
+    <script>
+        let weatherChart = document.getElementById('weatherChart').getContext('2d');
+        let lineChart = new Chart(weatherChart,{
+            type: 'line',
+            data:{
+   labels : [{% for i in history_time %}
+                  "{{i}}",
+              {% endfor %}],
+   datasets : [
+      {
+            label: '{{ title }} history',
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            bezierCurve : false,
+            data : [{% for i in history_val %}
+                  "{{i}}",
+              {% endfor %}]
+      }]
+   },
+
+            options:{},
+        });
+    </script>
+
+
+
+</div>
+</body>
+</html>
